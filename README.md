@@ -68,3 +68,9 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+<!-- <NavLink className='nav-link' activeClassName='active' to="/" >Home</NavLink> -->
+
+ABOVE CODE CHANGED TO BELOW. STAY UPDATED
+
+<NavLink className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')} to="/" >Home</NavLink>

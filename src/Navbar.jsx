@@ -22,17 +22,26 @@ function Navbar() {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <NavLink className="nav-link" to="/dashboard" activeClassName="active">
+                <NavLink
+                  className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
+                  to="/dashboard"
+                >
                   <i className="fa fa-dashboard" /> Dashboard
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/login" activeClassName="active">
+                <NavLink
+                  className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
+                  to="/login"
+                >
                   Login
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/register" activeClassName="active">
+                <NavLink
+                  className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
+                  to="/register"
+                >
                   Register
                 </NavLink>
               </li>
