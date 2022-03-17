@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 let Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [dirty, setDirty] = useState({ email: false, password: false });
   const [errors, setErrors] = useState({ email: [], password: [] });
-
+  const [loginMsg, setLoginMsg] = useState('');
   // changing document title
   useEffect(() => {
     document.title = 'Login - eCommerce';
@@ -19,7 +21,7 @@ let Login = () => {
     if (!email) {
       errorData.email.push('Email cannot be blank');
     }
-    const emailRegex = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*0;/;
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (email) {
       if (!emailRegex.test(email)) {
         errorData.email.push('Email format is not accepted');
@@ -42,8 +44,52 @@ let Login = () => {
     setErrors({ errorData });
   };
 
+  useEffect(validate, [email, password]);
+
+  // O N  L O G I N  C L I C K
+  const onLoginClick = async () => {
+    const dirtyData = dirty;
+    Object.keys(dirty).forEach((field) => {
+      dirtyData[field] = true;
+    });
+    setDirty(dirtyData);
+
+    // call validate
+    validate();
+
+    // only when there is no errors at all, we make http request
+    if (isValid()) {
+      const response = await fetch(
+        `http://localhost:5000/users?email=${email}&password=${password}`,
+        { method: 'GET' }
+      );
+      if (response.ok) {
+        const responseBody = await response.json();
+        if (responseBody.length > 0) {
+          navigate('/dashboard');
+        } else {
+          setLoginMsg(<span className="text-danger">Invalid login credentials</span>);
+        }
+      } else {
+        setLoginMsg(<span className="text-danger">Server problem</span>);
+      }
+    }
+    console.log('hi');
+  };
+
+  const isValid = () => {
+    let valid = true;
+    for (let field in errors) {
+      if (errors[field].length > 0) {
+        valid = false;
+      }
+    }
+    return valid;
+  };
+
   return (
     <div className="row">
+      <button onClick={onLoginClick}>ds</button>
       <div className="col-lg-5 col-md-7 mx-auto">
         <div className="card border-success shadow-lg my-2">
           <div className="card-header border-bottom border-success">
