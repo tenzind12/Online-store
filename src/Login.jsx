@@ -41,7 +41,7 @@ let Login = () => {
         );
       }
     }
-    setErrors({ errorData });
+    setErrors(errorData);
   };
 
   useEffect(validate, [email, password]);
@@ -89,7 +89,6 @@ let Login = () => {
 
   return (
     <div className="row">
-      <button onClick={onLoginClick}>ds</button>
       <div className="col-lg-5 col-md-7 mx-auto">
         <div className="card border-success shadow-lg my-2">
           <div className="card-header border-bottom border-success">
@@ -111,12 +110,15 @@ let Login = () => {
                 onChange={(event) => {
                   setEmail(event.target.value);
                 }}
-                onBlur={(e) => {
-                  setDirty({ ...dirty, [e.target.name]: true });
+                onBlur={() => {
+                  setDirty({ ...dirty, email: true });
                   validate();
                 }}
                 placeholder="Email"
               />
+              <div className="text-danger">
+                {dirty['email'] && errors['email'][0] ? errors['email'] : ''}
+              </div>
             </div>
             {/* email ends  */}
 
@@ -133,13 +135,22 @@ let Login = () => {
                 onChange={(event) => {
                   setPassword(event.target.value);
                 }}
-                onBlur={(e) => {
-                  setDirty({ ...dirty, [e.target.name]: true });
+                onBlur={() => {
+                  setDirty({ ...dirty, password: true });
                   validate();
                 }}
               />
+              <div className="text-danger">
+                {dirty['password'] && errors['password'][0] ? errors['password'] : ''}
+              </div>
             </div>
             {/* password ends  */}
+          </div>
+          <div className="card-footer text-center">
+            <div className="m-1">{loginMsg}</div>
+            <button className="btn btn-success m-2" onClick={onLoginClick}>
+              Login
+            </button>
           </div>
         </div>
       </div>

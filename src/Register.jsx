@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     email: '',
     password: '',
@@ -101,6 +103,7 @@ function Register() {
     document.title = 'Register - eCommerce';
   }, []);
 
+  // R E G I S T E R   F U N C T I O N
   const onRegisterClick = async () => {
     // setting every fieled to dirty
     let dirtyData = dirty;
@@ -129,6 +132,7 @@ function Register() {
       });
       if (response.ok) {
         setMessage(<span className="text-success">Registration successfull</span>);
+        navigate('/dashboard');
       } else {
         setMessage(<span className="text-danger">Error in database conneciton</span>);
       }
