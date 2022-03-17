@@ -13,7 +13,7 @@ function Register() {
 
   const [countries] = useState([
     { id: 1, countryName: 'France' },
-    { id: 2, countryName: 'Germnay' },
+    { id: 2, countryName: 'Germany' },
     { id: 3, countryName: 'Japan' },
     { id: 4, countryName: 'UK' },
   ]);
@@ -85,6 +85,10 @@ function Register() {
     // blank country
     if (!state.country) errorData.country.push('Country cannot be blank');
 
+    // set receiveNewsLetter to blank
+    errorData.receiveNewsLetter = [];
+
+    // finally setting all the errors
     setErrors(errorData);
   };
 
@@ -97,7 +101,7 @@ function Register() {
     document.title = 'Register - eCommerce';
   }, []);
 
-  const onRegisterClick = () => {
+  const onRegisterClick = async () => {
     // setting every fieled to dirty
     let dirtyData = dirty;
     Object.keys(dirty).forEach((field) => {
@@ -106,6 +110,43 @@ function Register() {
     setDirty(dirtyData);
 
     validate();
+
+    if (isValid()) {
+      const response = await fetch('http://localhost:5000/users', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: state.email,
+          password: state.password,
+          fullname: state.fullname,
+          dob: state.dob,
+          gender: state.gender,
+          country: state.country,
+          receiveNewsLetter: state.receiveNewsLetter,
+        }),
+        headers: {
+          'Content-type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        setMessage(<span className="text-success">Registration successfull</span>);
+      } else {
+        setMessage(<span className="text-danger">Error in database conneciton</span>);
+      }
+    } else {
+      setMessage(<span className="text-danger">Errors</span>);
+    }
+  };
+
+  const isValid = () => {
+    let valid = true;
+
+    // reading all fields from 'errors' state
+    for (let fields in errors) {
+      if (errors[fields].length > 0) {
+        valid = false;
+      }
+    }
+    return valid;
   };
 
   return (
@@ -144,7 +185,14 @@ function Register() {
                   onChange={(e) => {
                     setState({ ...state, [e.target.name]: e.target.value });
                   }}
+                  onBlur={(e) => {
+                    setDirty({ ...dirty, [e.target.name]: true });
+                    validate();
+                  }}
                 />
+                <div className="text-danger">
+                  {dirty['email'] && errors['email'][0] ? errors['email'] : ''}
+                </div>
               </div>
             </div>
             {/* email ends */}
@@ -164,7 +212,14 @@ function Register() {
                   onChange={(e) => {
                     setState({ ...state, [e.target.name]: e.target.value });
                   }}
+                  onBlur={(e) => {
+                    setDirty({ ...dirty, [e.target.name]: true });
+                    validate();
+                  }}
                 />
+                <div className="text-danger">
+                  {dirty['password'] && errors['password'][0] ? errors['password'] : ''}
+                </div>
               </div>
             </div>
             {/* password ends */}
@@ -184,7 +239,14 @@ function Register() {
                   onChange={(e) => {
                     setState({ ...state, [e.target.name]: e.target.value });
                   }}
+                  onBlur={(e) => {
+                    setDirty({ ...dirty, [e.target.name]: true });
+                    validate();
+                  }}
                 />
+                <div className="text-danger">
+                  {dirty['fullname'] && errors['fullname'][0] ? errors['fullname'] : ''}
+                </div>
               </div>
             </div>
             {/* Full name ends */}
@@ -204,7 +266,14 @@ function Register() {
                   onChange={(e) => {
                     setState({ ...state, [e.target.name]: e.target.value });
                   }}
+                  onBlur={(e) => {
+                    setDirty({ ...dirty, [e.target.name]: true });
+                    validate();
+                  }}
                 />
+                <div className="text-danger">
+                  {dirty['dob'] && errors['dob'][0] ? errors['dob'] : ''}
+                </div>
               </div>
             </div>
             {/* DOB ends */}
@@ -224,7 +293,14 @@ function Register() {
                     onChange={(e) => {
                       setState({ ...state, [e.target.name]: e.target.value });
                     }}
+                    onBlur={(e) => {
+                      setDirty({ ...dirty, [e.target.name]: true });
+                      validate();
+                    }}
                   />
+                  <div className="text-danger">
+                    {dirty['gender'] && errors['gender'][0] ? errors['gender'] : ''}
+                  </div>
                 </div>
                 <label className="form-check-inline" htmlFor="male">
                   Male
@@ -241,7 +317,14 @@ function Register() {
                     onChange={(e) => {
                       setState({ ...state, [e.target.name]: e.target.value });
                     }}
+                    onBlur={(e) => {
+                      setDirty({ ...dirty, [e.target.name]: true });
+                      validate();
+                    }}
                   />
+                  <div className="text-danger">
+                    {dirty['gender'] && errors['gender'][0] ? errors['gender'] : ''}
+                  </div>
                 </div>
                 <label className="form-check-inline" htmlFor="female">
                   Female
@@ -264,7 +347,12 @@ function Register() {
                   onChange={(e) => {
                     setState({ ...state, [e.target.name]: e.target.value });
                   }}
+                  onBlur={(e) => {
+                    setDirty({ ...dirty, [e.target.name]: true });
+                    validate();
+                  }}
                 >
+                  <option>Please select</option>
                   {countries.map((country) => {
                     return (
                       <option key={country.id} value={country.id}>
@@ -273,6 +361,9 @@ function Register() {
                     );
                   })}
                 </select>
+                <div className="text-danger">
+                  {dirty['country'] && errors['country'][0] ? errors['country'] : ''}
+                </div>
               </div>
             </div>
             {/* Country ends */}
@@ -292,11 +383,20 @@ function Register() {
                     onChange={(e) => {
                       setState({ ...state, [e.target.name]: e.target.checked });
                     }}
+                    onBlur={(e) => {
+                      setDirty({ ...dirty, [e.target.name]: true });
+                      validate();
+                    }}
                   />
                 </div>
                 <label className="form-check-inline" htmlFor="receiveNewsLetter">
                   Recieve News Letter
                 </label>
+              </div>
+              <div className="text-danger">
+                {dirty['receiveNewsLetter'] && errors['receiveNewsLetter'][0]
+                  ? errors['receiveNewsLetter']
+                  : ''}
               </div>
             </div>
             {/* Recieve newsletters ends */}
