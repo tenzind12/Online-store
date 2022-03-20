@@ -7,8 +7,8 @@ let Login = () => {
   const userContext = useContext(UserContext);
   // console.log(userContext);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('scott@test.com');
+  const [password, setPassword] = useState('Scott123');
   const [dirty, setDirty] = useState({ email: false, password: false });
   const [errors, setErrors] = useState({ email: [], password: [] });
   const [loginMsg, setLoginMsg] = useState('');
@@ -76,7 +76,7 @@ let Login = () => {
             ...userContext.user,
             isLoggedIn: true,
             currentUserId: responseBody[0].id,
-            currentUserName: responseBody[0].fullname,
+            currentUserName: responseBody[0].fullName,
           });
 
           // redirect using useNavigate()

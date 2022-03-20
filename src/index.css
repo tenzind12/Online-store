@@ -1,3 +1,15 @@
 .navbar-style {
   background-color: rgb(79, 113, 223) !important;
 }
+
+.nav-link.active {
+  color: #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+.header {
+  background-color: #e6e6e6;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}

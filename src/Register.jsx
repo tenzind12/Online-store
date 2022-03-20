@@ -8,7 +8,7 @@ function Register() {
   const [state, setState] = useState({
     email: '',
     password: '',
-    fullname: '',
+    fullName: '',
     gender: '',
     dob: '',
     country: '',
@@ -25,7 +25,7 @@ function Register() {
   const [errors, setErrors] = useState({
     email: [],
     password: [],
-    fullname: [],
+    fullName: [],
     dob: [],
     gender: [],
     country: [],
@@ -36,7 +36,7 @@ function Register() {
   const [dirty, setDirty] = useState({
     email: false,
     password: false,
-    fullname: false,
+    fullName: false,
     gender: false,
     dob: false,
     country: false,
@@ -74,9 +74,9 @@ function Register() {
     }
 
     /*  F U L L N A M E */
-    errorData.fullname = [];
-    // blank fullname
-    if (!state.fullname) errorData.fullname.push('Full Name cannot be blank');
+    errorData.fullName = [];
+    // blank fullName
+    if (!state.fullName) errorData.fullName.push('Full Name cannot be blank');
     setErrors(errorData);
 
     /*  D O B */
@@ -122,7 +122,7 @@ function Register() {
         body: JSON.stringify({
           email: state.email,
           password: state.password,
-          fullname: state.fullname,
+          fullName: state.fullName,
           dob: state.dob,
           gender: state.gender,
           country: state.country,
@@ -139,7 +139,7 @@ function Register() {
           ...userContext.user,
           isLoggedIn: true,
           currentUserId: responseBody.id,
-          currentUserName: responseBody.fullname,
+          currentUserName: responseBody.fullName,
         });
         navigate('/dashboard');
       } else {
@@ -239,16 +239,16 @@ function Register() {
 
             {/* Full name */}
             <div className="form-group mb-3 d-md-flex">
-              <label className="col-md-4" htmlFor="fullname">
+              <label className="col-md-4" htmlFor="fullName">
                 Full name
               </label>
               <div className="col-md-8 ">
                 <input
                   type="text"
-                  id="fullname"
-                  name="fullname"
+                  id="fullName"
+                  name="fullName"
                   className="form-control"
-                  value={state.fullname}
+                  value={state.fullName}
                   onChange={(e) => {
                     setState({ ...state, [e.target.name]: e.target.value });
                   }}
@@ -258,7 +258,7 @@ function Register() {
                   }}
                 />
                 <div className="text-danger">
-                  {dirty['fullname'] && errors['fullname'][0] ? errors['fullname'] : ''}
+                  {dirty['fullName'] && errors['fullName'][0] ? errors['fullName'] : ''}
                 </div>
               </div>
             </div>
