@@ -70,7 +70,6 @@ let Login = () => {
       if (response.ok) {
         const responseBody = await response.json();
         if (responseBody.length > 0) {
-          console.log(responseBody);
           // setting global state
           userContext.setUser({
             ...userContext.user,
@@ -88,7 +87,6 @@ let Login = () => {
         setLoginMsg(<span className="text-danger">Server problem</span>);
       }
     }
-    console.log('hi');
   };
 
   const isValid = () => {

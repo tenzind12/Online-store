@@ -1,5 +1,6 @@
 import { useEffect, useContext, useState } from 'react';
 import { UserContext } from './UserContext';
+import Order from './Order';
 
 function Dashboard() {
   // G E T  P A I D  O R D E R S
@@ -15,22 +16,36 @@ function Dashboard() {
   const [orders, setOrders] = useState([]);
   const userContext = useContext(UserContext);
 
-  // executing on load of the page
+  // U S E   E F F E C T
   useEffect(() => {
     document.title = 'Dashboard - eCommerce';
 
     // load orders data from database matching userId
     (async () => {
-      const response = await fetch(
+      const orderResponse = await fetch(
         `http://localhost:5000/orders?userId=${userContext.user.currentUserId}`,
         { method: 'GET' }
       );
-      if (response.ok) {
-        const responseBody = await response.json();
-        console.log(responseBody);
+      if (orderResponse.ok) {
+        const ordersResponseBody = await orderResponse.json();
+
+        /* fetch req for products data to find the products name corresponding to the order.productId */
+        const productsResponse = await fetch(`http://localhost:5000/products`, { method: 'GET' });
+
+        if (productsResponse.ok) {
+          const productsResponseBody = await productsResponse.json();
+
+          // reading all orders data & inserting object of product's details in order object
+          ordersResponseBody.forEach((order) => {
+            order.product = productsResponseBody.find((product) => product.id === order.productId);
+          });
+        }
+        // console.log(ordersResponseBody);
+        setOrders(ordersResponseBody);
       }
     })();
   }, [userContext.user.currentUserId]);
+
   return (
     <div className="row">
       <div className="col-12 py-3 header">
@@ -44,15 +59,25 @@ function Dashboard() {
           {/* get previous orders */}
           <div className="col-lg-6">
             <h4 className="py-2 my-2 text-info border-bottom border-info">
-              <i className="fa fa-history"></i>Previous Orders
+              <i className="fa fa-history"></i>Previous Orders{' '}
+              <span className="badge bg-info">{getPrevOrders(orders).length}</span>
             </h4>
+            {getPrevOrders(orders).length === 0 && <div className="text-danger">No Orders</div>}
+            {getPrevOrders(orders).map((order) => {
+              return <Order key={order.id} order={order} />;
+            })}
           </div>
 
           {/* get cart products */}
           <div className="col-lg-6">
             <h4 className="py-2 my-2 text-primary border-bottom border-primary">
-              <i className="fa fa-shopping-cart"></i>Cart
+              <i className="fa fa-shopping-cart"></i>Cart{' '}
+              <span className="badge bg-primary">{getCart(orders).length}</span>
             </h4>
+            {getCart(orders).length === 0 && <div className="text-danger">Cart is empty</div>}
+            {getCart(orders).map((order) => {
+              return <Order key={order.id} order={order} />;
+            })}
           </div>
         </div>
       </div>
