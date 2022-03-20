@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext';
 
 function Register() {
+  const userContext = useContext(UserContext);
   const navigate = useNavigate();
   const [state, setState] = useState({
     email: '',
@@ -103,7 +105,7 @@ function Register() {
     document.title = 'Register - eCommerce';
   }, []);
 
-  // R E G I S T E R   F U N C T I O N
+  // R E G I S T E R   B U T T O N   F U N C T I O N
   const onRegisterClick = async () => {
     // setting every fieled to dirty
     let dirtyData = dirty;
@@ -132,6 +134,13 @@ function Register() {
       });
       if (response.ok) {
         setMessage(<span className="text-success">Registration successfull</span>);
+        const responseBody = await response.json();
+        userContext.setUser({
+          ...userContext.user,
+          isLoggedIn: true,
+          currentUserId: responseBody.id,
+          currentUserName: responseBody.fullname,
+        });
         navigate('/dashboard');
       } else {
         setMessage(<span className="text-danger">Error in database conneciton</span>);
@@ -303,7 +312,7 @@ function Register() {
                     }}
                   />
                   <div className="text-danger">
-                    {dirty['gender'] && errors['gender'][0] ? errors['gender'] : ''}
+                    {dirty['gender'] && errors['gender'] ? errors['gender'] : ''}
                   </div>
                 </div>
                 <label className="form-check-inline" htmlFor="male">
@@ -327,7 +336,7 @@ function Register() {
                     }}
                   />
                   <div className="text-danger">
-                    {dirty['gender'] && errors['gender'][0] ? errors['gender'] : ''}
+                    {dirty['gender'] && errors['gender'] ? errors['gender'] : ''}
                   </div>
                 </div>
                 <label className="form-check-inline" htmlFor="female">

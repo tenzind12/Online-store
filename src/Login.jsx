@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext';
 
 let Login = () => {
   const navigate = useNavigate();
+  const userContext = useContext(UserContext);
+  // console.log(userContext);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [dirty, setDirty] = useState({ email: false, password: false });
@@ -66,6 +70,16 @@ let Login = () => {
       if (response.ok) {
         const responseBody = await response.json();
         if (responseBody.length > 0) {
+          console.log(responseBody);
+          // setting global state
+          userContext.setUser({
+            ...userContext.user,
+            isLoggedIn: true,
+            currentUserId: responseBody[0].id,
+            currentUserName: responseBody[0].fullname,
+          });
+
+          // redirect using useNavigate()
           navigate('/dashboard');
         } else {
           setLoginMsg(<span className="text-danger">Invalid login credentials</span>);
