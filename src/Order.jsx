@@ -1,5 +1,5 @@
 function Order({ order }) {
-  //   console.log(order);
+  // console.log(order);
   return (
     <div className="card my-2 shadow">
       <div className="card-body">
