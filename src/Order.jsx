@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Order({ order, buyHandler }) {
+function Order({ order, buyHandler, deleteHandler }) {
   console.log('order rendered:', order);
   return (
     <div className="card my-2 shadow">
@@ -20,7 +20,10 @@ function Order({ order, buyHandler }) {
               >
                 <i className="fa fa-truck"></i> Buy now
               </button>
-              <button className="btn btn-sm btn-danger mx-2">
+              <button
+                className="btn btn-sm btn-danger mx-2"
+                onClick={() => deleteHandler(order.id)}
+              >
                 <i className="fa fa-trash-o"></i>
               </button>
             </div>
