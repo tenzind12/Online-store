@@ -44,6 +44,33 @@ function Dashboard() {
     loadDataFromDatabase();
   }, [userContext.user.currentUserId, loadDataFromDatabase]);
 
+  // B U Y   H A N D L E R
+  const buyHandler = async (orderId, userId, productId, quantity) => {
+    if (window.confirm('Do you want to place the order?')) {
+      // CREATE UPDATED ORDER'S OBJECT
+      let updateOrder = {
+        id: orderId,
+        userId: userId,
+        productId: productId,
+        quantity: quantity,
+        isPaymentCompleted: true,
+      };
+
+      // UPDATE WITH NEW OBJECT IN DATABASE
+      const orderResponse = await fetch(`http://localhost:5000/orders/${orderId}`, {
+        method: 'PUT',
+        body: JSON.stringify(updateOrder),
+        headers: { 'Content-type': 'application/json' },
+      });
+
+      const orderResponseBody = await orderResponse.json();
+      if (orderResponse.ok) {
+        console.log(orderResponseBody);
+        loadDataFromDatabase();
+      }
+    }
+  };
+
   return (
     <div className="row">
       <div className="col-12 py-3 header">
@@ -81,7 +108,7 @@ function Dashboard() {
               <div className="text-danger">Cart is empty</div>
             )}
             {OrderService.getCart(orders).map((order) => {
-              return <Order key={order.id} order={order} />;
+              return <Order key={order.id} order={order} buyHandler={buyHandler} />;
             })}
           </div>
         </div>
