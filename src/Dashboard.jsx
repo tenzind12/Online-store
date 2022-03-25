@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext, useState, useCallback } from 'react';
 import { UserContext } from './UserContext';
 import Order from './Order';
 import { OrderService, ProductService } from './Service';
@@ -7,45 +7,51 @@ function Dashboard() {
   const [orders, setOrders] = useState([]);
   const userContext = useContext(UserContext);
 
-  // U S E   E F F E C T
+  // FETCH DATA FROM "order's" ARRAY
+  const loadDataFromDatabase = useCallback(async () => {
+    /* load orders data from database matching userId */
+    const orderResponse = await fetch(
+      `http://localhost:5000/orders?userId=${userContext.user.currentUserId}`,
+      { method: 'GET' }
+    );
+    if (orderResponse.ok) {
+      const ordersResponseBody = await orderResponse.json();
+
+      /* fetch req for products data to find the products name corresponding to the order.productId */
+      const productsResponse = await ProductService.fetchProducts();
+
+      if (productsResponse.ok) {
+        const productsResponseBody = await productsResponse.json();
+
+        /* reading all orders data & inserting object of product's details in order's object */
+        ordersResponseBody.forEach((order) => {
+          // console.log(productsResponseBody[0].id === order.productId);
+          order.product = ProductService.getProductByProductId(
+            productsResponseBody,
+            order.productId
+          );
+        });
+      }
+      // console.log(ordersResponseBody);
+      setOrders(ordersResponseBody);
+    }
+  }, [userContext.user.currentUserId]);
+
+  // U S E   E F F E C T on page load
   useEffect(() => {
     document.title = 'Dashboard - eCommerce';
 
-    /* load orders data from database matching userId */
-    (async () => {
-      const orderResponse = await fetch(
-        `http://localhost:5000/orders?userId=${userContext.user.currentUserId}`,
-        { method: 'GET' }
-      );
-      if (orderResponse.ok) {
-        const ordersResponseBody = await orderResponse.json();
-
-        /* fetch req for products data to find the products name corresponding to the order.productId */
-        const productsResponse = await ProductService.fetchProducts();
-
-        if (productsResponse.ok) {
-          const productsResponseBody = await productsResponse.json();
-
-          /* reading all orders data & inserting object of product's details in order's object */
-          ordersResponseBody.forEach((order) => {
-            // console.log(productsResponseBody[0].id === order.productId);
-            order.product = ProductService.getProductByProductId(
-              productsResponseBody,
-              order.productId
-            );
-          });
-        }
-        // console.log(ordersResponseBody);
-        setOrders(ordersResponseBody);
-      }
-    })();
-  }, [userContext.user.currentUserId]);
+    loadDataFromDatabase();
+  }, [userContext.user.currentUserId, loadDataFromDatabase]);
 
   return (
     <div className="row">
       <div className="col-12 py-3 header">
         <h4>
-          <i className="fa fa-dashboard"></i> Dashboard
+          <i className="fa fa-dashboard"></i> Dashboard{' '}
+          <button className="btn btn-sm btn-info text-light" onClick={loadDataFromDatabase}>
+            <i className="fa fa-refresh"> Refresh</i>
+          </button>
         </h4>
       </div>
 
