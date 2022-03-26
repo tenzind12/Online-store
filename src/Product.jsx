@@ -1,8 +1,6 @@
 export default function Product({ product, addToCartHandler }) {
-  const { id, productName, brand, brandId, category, categoryId, isOrdered, price, rating } =
-    product;
-
-  console.log(product);
+  const { productName, brand, category, isOrdered, price, rating } = product;
+  // console.log(product);
 
   return (
     <div className="col-lg-6">

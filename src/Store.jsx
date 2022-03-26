@@ -7,6 +7,8 @@ export default function Store() {
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [productsToShow, setProductsToShow] = useState([]);
+  const [search, setSearch] = useState('');
 
   const userContext = useContext(UserContext);
 
@@ -32,7 +34,9 @@ export default function Store() {
       setCategories(categoriesResponseBody);
 
       // 3. FETCH ALL PRODUCTS
-      const productResponse = await ProductService.fetchProducts();
+      const productResponse = await fetch(
+        `http://localhost:5000/products?productName_like=${search}`
+      );
       const productResponseBody = await productResponse.json();
       if (productResponse.ok) {
         productResponseBody.forEach((product) => {
@@ -48,28 +52,50 @@ export default function Store() {
         });
       }
       setProducts(productResponseBody);
+      setProductsToShow(productResponseBody);
     })();
-  }, []);
+  }, [search]);
 
-  // brands check uncheck
+  // ========== brands check uncheck
   const updateBrandIsChecked = (id) => {
     const brandData = brands.map((brand) => {
       if (brand.id === id) brand.isChecked = !brand.isChecked;
       return brand;
     });
     setBrands(brandData);
+    updateProductsToShow();
   };
 
-  // categories check uncheck
+  // ========== categories check uncheck
   const updateCategoryIsChecked = (id) => {
     const categoryData = categories.map((category) => {
       if (category.id === id) category.isChecked = !category.isChecked;
       return category;
     });
     setCategories(categoryData);
+    updateProductsToShow();
   };
 
-  // add to cart
+  // ========== update Products to show (only checked categories/brands will be shown)
+  const updateProductsToShow = () => {
+    setProductsToShow(
+      products
+        .filter((product) => {
+          return (
+            categories.filter(
+              (category) => category.id === product.categoryId && category.isChecked
+            ).length > 0
+          );
+        })
+        .filter((product) => {
+          return (
+            brands.filter((brand) => brand.id === product.brandId && brand.isChecked).length > 0
+          );
+        })
+    );
+  };
+
+  // ========== add to cart
   const addToCartHandler = (product) => {
     (async () => {
       const newOrder = {
@@ -90,10 +116,11 @@ export default function Store() {
 
         // setting isOrdered = true
         const newProducts = products.map((prod) => {
-          if (prod.id === product.id) prod.isOrdered = true;
+          if (prod.id === product.Id) prod.isOrdered = true;
           return prod;
         });
         setProducts(newProducts);
+        updateProductsToShow();
       } else {
         console.log(orderResponse);
       }
@@ -105,8 +132,19 @@ export default function Store() {
       <div className="row py-3 header">
         <div className="col-lg-3">
           <h4>
-            <i className="fa fa-shopping-bag"></i>Store
+            <i className="fa fa-shopping-bag"></i>Store{' '}
+            <span className="badge bg-secondary">{productsToShow.length}</span>
           </h4>
+        </div>
+        <div className="col-lg-9">
+          <input
+            type="search"
+            value={search}
+            placeholder="Search"
+            className="form-control"
+            autoFocus="autofocus"
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
       </div>
 
@@ -166,7 +204,7 @@ export default function Store() {
         </div>
         <div className="col-lg-9">
           <div className="row">
-            {products.map((product) => (
+            {productsToShow.map((product) => (
               <Product key={product.id} product={product} addToCartHandler={addToCartHandler} />
             ))}
           </div>
