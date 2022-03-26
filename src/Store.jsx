@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
 import { BrandService, CategoriesService, ProductService } from './Service';
+import Product from './Product';
 
 export default function Store() {
   const [brands, setBrands] = useState([]);
@@ -10,6 +11,7 @@ export default function Store() {
   const userContext = useContext(UserContext);
 
   useEffect(() => {
+    document.title = 'Store - eCommerce';
     (async () => {
       // 1. FETCH ALL BRANDS
       const brandsResponse = await BrandService.fetchBrands();
@@ -35,11 +37,17 @@ export default function Store() {
       if (productResponse.ok) {
         productResponseBody.forEach((product) => {
           product.isOrdered = false;
-          product.brand = BrandService.getBrandById(brands, product.brandId);
-          product.category = CategoriesService.getCategoryById(categories, product.categoryId);
+
+          // create matching brand object in product
+          product.brand = BrandService.getBrandById(brandsResponseBody, product.brandId);
+          // create matching category object in product
+          product.category = CategoriesService.getCategoryById(
+            categoriesResponseBody,
+            product.categoryId
+          );
         });
       }
-      console.log(productResponseBody);
+      setProducts(productResponseBody);
     })();
   }, []);
 
@@ -59,6 +67,36 @@ export default function Store() {
       return category;
     });
     setCategories(categoryData);
+  };
+
+  // add to cart
+  const addToCartHandler = (product) => {
+    (async () => {
+      const newOrder = {
+        userId: userContext.user.currentUserId,
+        productId: product.id,
+        quantity: 1,
+        isPaymentCompleted: false,
+      };
+
+      const orderResponse = await fetch(`http://localhost:5000/orders`, {
+        method: 'POST',
+        body: JSON.stringify(newOrder),
+        headers: { 'Content-type': 'application/json' },
+      });
+
+      if (orderResponse.ok) {
+        const orderResponseBody = await orderResponse.json();
+        console.log(orderResponseBody);
+        setProducts((products) => {
+          const currentProduct = products.find((prod) => prod.id === product.id);
+          currentProduct.isOrdered = true;
+          return products;
+        });
+      } else {
+        console.log(orderResponse);
+      }
+    })();
   };
 
   return (
@@ -126,11 +164,11 @@ export default function Store() {
           </div>
         </div>
         <div className="col-lg-9">
-          <>
-            {JSON.stringify(brands)}
-            {JSON.stringify(categories)}
-            {JSON.stringify(products)}
-          </>
+          <div className="row">
+            {products.map((product) => (
+              <Product key={product.id} product={product} addToCartHandler={addToCartHandler} />
+            ))}
+          </div>
         </div>
       </div>
     </>
