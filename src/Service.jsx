@@ -19,7 +19,7 @@ export const ProductService = {
     return products.find((product) => product.id === productId);
   },
 
-  //  F E T C H   P R O D U C T S
+  //  F E T C H  A L L  P R O D U C T S
   fetchProducts: () => {
     return fetch(`http://localhost:5000/products`, { method: 'GET' });
   },
@@ -31,6 +31,11 @@ export const BrandService = {
   fetchBrands: () => {
     return fetch('http://localhost:5000/brands', { method: 'GET' });
   },
+
+  // get brand by Id
+  getBrandById: (brands, id) => {
+    return brands.find((brand) => brand.id === id);
+  },
 };
 
 // ======= C A T E G O R I E S == F U N C T I O N S ======= //
@@ -38,5 +43,10 @@ export const CategoriesService = {
   // fetch categories
   fetchCategories: () => {
     return fetch('http://localhost:5000/categories', { method: 'GET' });
+  },
+
+  // get category by Id
+  getCategoryById: (categories, id) => {
+    return categories.find((category) => category.id === id);
   },
 };

@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
-import { BrandService, CategoriesService } from './Service';
+import { BrandService, CategoriesService, ProductService } from './Service';
 
 export default function Store() {
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
-  console.log(brands);
+  const [products, setProducts] = useState([]);
 
   const userContext = useContext(UserContext);
 
@@ -28,6 +28,18 @@ export default function Store() {
         categoriesResponseBody.forEach((category) => (category.isChecked = true));
       }
       setCategories(categoriesResponseBody);
+
+      // 3. FETCH ALL PRODUCTS
+      const productResponse = await ProductService.fetchProducts();
+      const productResponseBody = await productResponse.json();
+      if (productResponse.ok) {
+        productResponseBody.forEach((product) => {
+          product.isOrdered = false;
+          product.brand = BrandService.getBrandById(brands, product.brandId);
+          product.category = CategoriesService.getCategoryById(categories, product.categoryId);
+        });
+      }
+      console.log(productResponseBody);
     })();
   }, []);
 
@@ -37,7 +49,6 @@ export default function Store() {
       if (brand.id === id) brand.isChecked = !brand.isChecked;
       return brand;
     });
-
     setBrands(brandData);
   };
 
@@ -118,6 +129,7 @@ export default function Store() {
           <>
             {JSON.stringify(brands)}
             {JSON.stringify(categories)}
+            {JSON.stringify(products)}
           </>
         </div>
       </div>
