@@ -2,6 +2,8 @@ export default function Product({ product, addToCartHandler }) {
   const { id, productName, brand, brandId, category, categoryId, isOrdered, price, rating } =
     product;
 
+  console.log(product);
+
   return (
     <div className="col-lg-6">
       <div className="card m1">
@@ -24,7 +26,7 @@ export default function Product({ product, addToCartHandler }) {
           </div>
           <div className="float-end">
             {isOrdered ? (
-              <span className="text-primary">Added</span>
+              <span className="text-primary">Added To Cart</span>
             ) : (
               <button className="btn btn-sm btn-primary" onClick={() => addToCartHandler(product)}>
                 <i className="fa fa-cart-plus"></i> Add to Cart

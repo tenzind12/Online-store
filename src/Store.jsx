@@ -87,12 +87,13 @@ export default function Store() {
 
       if (orderResponse.ok) {
         const orderResponseBody = await orderResponse.json();
-        console.log(orderResponseBody);
-        setProducts((products) => {
-          const currentProduct = products.find((prod) => prod.id === product.id);
-          currentProduct.isOrdered = true;
-          return products;
+
+        // setting isOrdered = true
+        const newProducts = products.map((prod) => {
+          if (prod.id === product.id) prod.isOrdered = true;
+          return prod;
         });
+        setProducts(newProducts);
       } else {
         console.log(orderResponse);
       }
