@@ -42,6 +42,17 @@ function Navbar() {
                 </li>
               )}
 
+              {userContext.user.isLoggedIn && (
+                <li className="nav-item">
+                  <NavLink
+                    className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
+                    to="/store"
+                  >
+                    <i className="fa fa-shopping-bag" /> Store
+                  </NavLink>
+                </li>
+              )}
+
               {/* display only when not logged in */}
               {!userContext.user.isLoggedIn && (
                 <li className="nav-item">

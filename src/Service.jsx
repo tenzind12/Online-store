@@ -24,3 +24,19 @@ export const ProductService = {
     return fetch(`http://localhost:5000/products`, { method: 'GET' });
   },
 };
+
+// ======= B R A N D S == F U N C T I O N S ======= //
+export const BrandService = {
+  // fetching all brands
+  fetchBrands: () => {
+    return fetch('http://localhost:5000/brands', { method: 'GET' });
+  },
+};
+
+// ======= C A T E G O R I E S == F U N C T I O N S ======= //
+export const CategoriesService = {
+  // fetch categories
+  fetchCategories: () => {
+    return fetch('http://localhost:5000/categories', { method: 'GET' });
+  },
+};

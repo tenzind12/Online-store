@@ -6,6 +6,7 @@ import Register from './Register';
 import PageNotFound from './PageNotFound';
 import Navbar from './Navbar';
 import { UserContext } from './UserContext';
+import Store from './Store';
 
 function App() {
   const [user, setUser] = useState({
@@ -23,6 +24,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/Register" element={<Register />} />
+            <Route path="/store" element={<Store />} />
             <Route path="/*" element={<PageNotFound />} />
           </Routes>
         </div>
