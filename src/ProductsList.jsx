@@ -16,7 +16,10 @@ export default function ProductsList() {
       const categoriesResponse = await CategoriesService.fetchCategories();
       const allCategories = await categoriesResponse.json();
 
-      const productsResponse = await ProductService.fetchProducts();
+      const productsResponse = await fetch(
+        `http://localhost:5000/products?productName_like=${search}`,
+        { method: 'GET' }
+      );
       const productsResponseBody = await productsResponse.json();
 
       productsResponseBody.forEach((product) => {
@@ -25,7 +28,7 @@ export default function ProductsList() {
       });
       setProducts(productsResponseBody);
     })();
-  }, []);
+  }, [search]);
 
   return (
     <div className="row">
