@@ -49,3 +49,19 @@ export const CategoriesService = {
     return categories.find((category) => category.id === id);
   },
 };
+
+export const SortService = {
+  getSortedArray: (elements, sortBy, sortOrder) => {
+    if (!elements) return elements;
+
+    const newElements = [...elements];
+    newElements.sort((a, b) => {
+      if (a[sortBy] && b[sortBy])
+        return a[sortBy].toString().toLowerCase() - b[sortBy].toString().toLowerCase();
+      else return 0;
+    });
+
+    if (sortOrder === 'DESC') newElements.reverse();
+    return newElements;
+  },
+};

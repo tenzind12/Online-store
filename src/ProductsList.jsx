@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
-import { ProductService, CategoriesService, BrandService } from './Service';
+import { CategoriesService, BrandService, SortService } from './Service';
 
 export default function ProductsList() {
   const [search, setSearch] = useState('');
   const [products, setProducts] = useState([]);
+  const [originalProducts, setOriginalProducts] = useState([]);
+
+  const [sortBy, setSortBy] = useState('productName');
+  const [sortOrder, setSortOrder] = useState('ASC');
 
   // USE EFFECT
   useEffect(() => {
@@ -17,7 +21,7 @@ export default function ProductsList() {
       const allCategories = await categoriesResponse.json();
 
       const productsResponse = await fetch(
-        `http://localhost:5000/products?productName_like=${search}`,
+        `http://localhost:5000/products?productName_like=${search}&_sort=productName&_order=ASC`,
         { method: 'GET' }
       );
       const productsResponseBody = await productsResponse.json();
@@ -27,8 +31,31 @@ export default function ProductsList() {
         product.category = CategoriesService.getCategoryById(allCategories, product.categoryId);
       });
       setProducts(productsResponseBody);
+      setOriginalProducts(productsResponseBody);
     })();
   }, [search]);
+
+  // click on column name handler
+  const sortColumnNameHandler = (e, columnName) => {
+    e.preventDefault();
+    setSortBy(columnName);
+    const negatedSortOrder = sortOrder === 'ASC' ? 'DESC' : 'ASC';
+    setSortOrder(negatedSortOrder);
+    setProducts(SortService.getSortedArray(originalProducts, columnName, negatedSortOrder));
+  };
+
+  // render column name
+  const getColumnHeader = (columnName, displayName) => {
+    return (
+      <>
+        <a href="/#" onClick={(e) => sortColumnNameHandler(e, columnName)}>
+          {displayName}
+        </a>{' '}
+        {sortBy === columnName && sortOrder === 'ASC' && <i className="fa fa-sort-up"></i>}
+        {sortBy === columnName && sortOrder === 'DESC' && <i className="fa fa-sort-down"></i>}
+      </>
+    );
+  };
 
   return (
     <div className="row">
@@ -62,12 +89,11 @@ export default function ProductsList() {
           <table className="table">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Brand</th>
-                <th>Category</th>
-                <th>Rating</th>
+                <th>{getColumnHeader('productName', 'Product Name')}</th>
+                <th>{getColumnHeader('price', 'Price')}</th>
+                <th>{getColumnHeader('brand', 'Brand')}</th>
+                <th>{getColumnHeader('category', 'Category')}</th>
+                <th>{getColumnHeader('rating', 'Rating')}</th>
               </tr>
             </thead>
 
@@ -75,7 +101,6 @@ export default function ProductsList() {
               {products.map((product) => {
                 return (
                   <tr key={product.id}>
-                    <td>{product.id}</td>
                     <td>{product.productName}</td>
                     <td>{product.price}</td>
                     <td>{product.brand.brandName}</td>
