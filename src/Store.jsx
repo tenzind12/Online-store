@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
-import { BrandService, CategoriesService, ProductService } from './Service';
+import { BrandService, CategoriesService } from './Service';
 import Product from './Product';
 
 export default function Store() {

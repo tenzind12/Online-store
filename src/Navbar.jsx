@@ -55,8 +55,9 @@ function Navbar() {
                   <NavLink
                     className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
                     to="/products"
-                  />
-                  <i className="fa fa-suitcase"></i> Products
+                  >
+                    <i className="fa fa-suitcase"></i> Products
+                  </NavLink>
                 </li>
               )}
 

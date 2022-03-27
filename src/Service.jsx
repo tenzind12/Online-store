@@ -1,31 +1,30 @@
-// ======= O R D E R S == F U N C T I O N S ======= //
-
+// 1. ORDERS == F U N C T I O N S ======= //
 export const OrderService = {
-  // G E T  P A I D  O R D E R S
+  // fetch previous orders (payment done)
   getPrevOrders: (orders) => {
     return orders.filter((order) => order.isPaymentCompleted === true);
   },
 
-  // G E T  C A R T (payment not done)
+  // fetch cart (payment not done)
   getCart: (orders) => {
     return orders.filter((order) => order.isPaymentCompleted === false);
   },
 };
 
-// ======= P R O D U C T S == F U N C T I O N S ======= //
+// 2. PRODUCTS == F U N C T I O N S ======= //
 export const ProductService = {
-  // G E T   P R O D U C T   by their ID
+  // fetch products by ID
   getProductByProductId: (products, productId) => {
     return products.find((product) => product.id === productId);
   },
 
-  //  F E T C H  A L L  P R O D U C T S
+  //  fetch all products
   fetchProducts: () => {
     return fetch(`http://localhost:5000/products`, { method: 'GET' });
   },
 };
 
-// ======= B R A N D S == F U N C T I O N S ======= //
+// 3. BRANDS == F U N C T I O N S ======= //
 export const BrandService = {
   // fetching all brands
   fetchBrands: () => {
@@ -38,7 +37,7 @@ export const BrandService = {
   },
 };
 
-// ======= C A T E G O R I E S == F U N C T I O N S ======= //
+// 4. CATEGORIES == F U N C T I O N S ======= //
 export const CategoriesService = {
   // fetch categories
   fetchCategories: () => {
