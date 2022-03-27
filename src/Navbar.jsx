@@ -6,8 +6,13 @@ function Navbar() {
   const userContext = useContext(UserContext);
 
   const onLogoutClick = () => {
-    userContext.setUser({ isLoggedIn: false, currentUserName: null, currentUserId: null });
-    window.location.hash = '/';
+    userContext.setUser({
+      isLoggedIn: false,
+      currentUserName: null,
+      currentUserId: null,
+      currentUserRole: null,
+    });
+    window.location.hash = '/login';
   };
 
   return (
@@ -30,8 +35,10 @@ function Navbar() {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              {/* display when logged in */}
-              {userContext.user.isLoggedIn && (
+              {/* DISPLAY ONLY WHEN LOGGED IN */}
+
+              {/* USER-ROLE = "USER" */}
+              {userContext.user.isLoggedIn && userContext.user.currentUserRole === 'user' && (
                 <li className="nav-item">
                   <NavLink
                     className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
@@ -39,6 +46,17 @@ function Navbar() {
                   >
                     <i className="fa fa-dashboard" /> Dashboard
                   </NavLink>
+                </li>
+              )}
+
+              {/* USER-ROLE = "ADMIN" */}
+              {userContext.user.isLoggedIn && userContext.user.currentUserRole === 'admin' && (
+                <li className="nav-item">
+                  <NavLink
+                    className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
+                    to="/products"
+                  />
+                  <i className="fa fa-suitcase"></i> Products
                 </li>
               )}
 

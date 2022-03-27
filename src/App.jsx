@@ -7,12 +7,14 @@ import PageNotFound from './PageNotFound';
 import Navbar from './Navbar';
 import { UserContext } from './UserContext';
 import Store from './Store';
+import ProductsList from './ProductsList';
 
 function App() {
   const [user, setUser] = useState({
     isLoggedIn: false,
     currentUserId: null,
     currentUserName: null,
+    currentUserRole: null,
   });
 
   return (
@@ -25,7 +27,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/Register" element={<Register />} />
             <Route path="/store" element={<Store />} />
-            <Route path="/*" element={<PageNotFound />} />
+            <Route path="/products" element={<ProductsList />} />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </div>
       </HashRouter>

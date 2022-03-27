@@ -7,8 +7,8 @@ let Login = () => {
   const userContext = useContext(UserContext);
   // console.log(userContext);
 
-  const [email, setEmail] = useState('scott@test.com');
-  const [password, setPassword] = useState('Scott123');
+  const [email, setEmail] = useState('admin@test.com');
+  const [password, setPassword] = useState('Admin123');
   const [dirty, setDirty] = useState({ email: false, password: false });
   const [errors, setErrors] = useState({ email: [], password: [] });
   const [loginMsg, setLoginMsg] = useState('');
@@ -76,10 +76,15 @@ let Login = () => {
             isLoggedIn: true,
             currentUserId: responseBody[0].id,
             currentUserName: responseBody[0].fullName,
+            currentUserRole: responseBody[0].role,
           });
 
-          // redirect using useNavigate()
-          navigate('/dashboard');
+          // redirect using useNavigate() according to user role
+          if (responseBody[0].role === 'user') {
+            navigate('/dashboard');
+          } else {
+            navigate('/products');
+          }
         } else {
           setLoginMsg(<span className="text-danger">Invalid login credentials</span>);
         }
@@ -160,7 +165,7 @@ let Login = () => {
           </div>
           <div className="card-footer text-center">
             <div className="m-1">{loginMsg}</div>
-            <button className="btn btn-success m-2" onClick={onLoginClick}>
+            <button className="btn btn-success m-2" onClick={onLoginClick} type="button">
               Login
             </button>
           </div>

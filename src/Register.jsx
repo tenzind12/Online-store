@@ -127,6 +127,7 @@ function Register() {
           gender: state.gender,
           country: state.country,
           receiveNewsLetter: state.receiveNewsLetter,
+          role: 'user',
         }),
         headers: {
           'Content-type': 'application/json',
@@ -140,6 +141,7 @@ function Register() {
           isLoggedIn: true,
           currentUserId: responseBody.id,
           currentUserName: responseBody.fullName,
+          currentUserRole: responseBody.role,
         });
         navigate('/dashboard');
       } else {
