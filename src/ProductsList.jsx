@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { CategoriesService, BrandService, SortService } from './Service';
 
 export default function ProductsList() {
@@ -6,8 +6,12 @@ export default function ProductsList() {
   const [products, setProducts] = useState([]);
   const [originalProducts, setOriginalProducts] = useState([]);
 
+  // search bar sort filter
   const [sortBy, setSortBy] = useState('productName');
   const [sortOrder, setSortOrder] = useState('ASC');
+
+  const [brands, setBrands] = useState([]); // stored all brands object
+  const [selectedBrand, setSelectedBrand] = useState(''); // name of brand selected by user
 
   // USE EFFECT
   useEffect(() => {
@@ -15,6 +19,7 @@ export default function ProductsList() {
       // 1. fetch all brands to be used in get brand by id below =====
       const brandsResponse = await BrandService.fetchBrands();
       const allBrands = await brandsResponse.json();
+      setBrands(allBrands);
 
       // 2. fetch all categories to be used in get category by id below =====
       const categoriesResponse = await CategoriesService.fetchCategories();
@@ -35,14 +40,24 @@ export default function ProductsList() {
     })();
   }, [search]);
 
+  const filteredProducts = useMemo(() => {
+    console.log('filtered prodcuts', originalProducts, selectedBrand);
+    return originalProducts.filter(
+      (product) => product.brand.brandName.indexOf(selectedBrand) >= 0
+    );
+  }, [originalProducts, selectedBrand]);
+
   // click on column name handler
   const sortColumnNameHandler = (e, columnName) => {
     e.preventDefault();
     setSortBy(columnName);
     const negatedSortOrder = sortOrder === 'ASC' ? 'DESC' : 'ASC';
     setSortOrder(negatedSortOrder);
-    setProducts(SortService.getSortedArray(originalProducts, columnName, negatedSortOrder));
   };
+
+  useEffect(() => {
+    setProducts(SortService.getSortedArray(filteredProducts, sortBy, sortOrder));
+  }, [filteredProducts, sortBy, sortOrder]);
 
   // render column name
   const getColumnHeader = (columnName, displayName) => {
@@ -70,7 +85,7 @@ export default function ProductsList() {
             </h4>
           </div>
 
-          <div className="col-lg-9">
+          <div className="col-lg-6">
             <input
               type="search"
               placeholder="Search"
@@ -79,6 +94,21 @@ export default function ProductsList() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+          </div>
+
+          <div className="col-lg-3">
+            <select
+              className="form-control "
+              value={selectedBrand}
+              onChange={(e) => setSelectedBrand(e.target.value)}
+            >
+              <option value="">All Brands</option>
+              {brands.map((brand) => (
+                <option value={brand.brandName} key={brand.id} className="dropdown-item">
+                  {brand.brandName}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
