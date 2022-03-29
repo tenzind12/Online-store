@@ -1,11 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
 
 let Login = () => {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
-  // console.log(userContext);
+  const emailInputRef = useRef();
+
+  console.log(emailInputRef);
 
   const [email, setEmail] = useState('admin@test.com');
   const [password, setPassword] = useState('Admin123');
@@ -15,6 +17,7 @@ let Login = () => {
   // changing document title
   useEffect(() => {
     document.title = 'Login - eCommerce';
+    emailInputRef.current.focus();
   }, []);
 
   const validate = () => {
@@ -133,6 +136,7 @@ let Login = () => {
                   validate();
                 }}
                 placeholder="Email"
+                ref={emailInputRef}
               />
               <div className="text-danger">
                 {dirty['email'] && errors['email'][0] ? errors['email'] : ''}
