@@ -70,13 +70,14 @@ let Login = () => {
       if (response.ok) {
         const responseBody = await response.json();
         if (responseBody.length > 0) {
-          // setting global state
-          userContext.setUser({
-            ...userContext.user,
-            isLoggedIn: true,
-            currentUserId: responseBody[0].id,
-            currentUserName: responseBody[0].fullName,
-            currentUserRole: responseBody[0].role,
+          // setting global state context and reducer/dispatch
+          userContext.dispatch({
+            type: 'login',
+            payload: {
+              currentUserId: responseBody[0].id,
+              currentUserName: responseBody[0].fullName,
+              currentUserRole: responseBody[0].role,
+            },
           });
 
           // redirect using useNavigate() according to user role

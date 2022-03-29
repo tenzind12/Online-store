@@ -41,7 +41,7 @@ export default function ProductsList() {
   }, [search]);
 
   const filteredProducts = useMemo(() => {
-    console.log('filtered prodcuts', originalProducts, selectedBrand);
+    // console.log('filtered prodcuts', originalProducts, selectedBrand);
     return originalProducts.filter(
       (product) => product.brand.brandName.indexOf(selectedBrand) >= 0
     );

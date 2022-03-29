@@ -136,13 +136,16 @@ function Register() {
       if (response.ok) {
         setMessage(<span className="text-success">Registration successfull</span>);
         const responseBody = await response.json();
-        userContext.setUser({
-          ...userContext.user,
-          isLoggedIn: true,
-          currentUserId: responseBody.id,
-          currentUserName: responseBody.fullName,
-          currentUserRole: responseBody.role,
+
+        userContext.dispatch({
+          type: 'login',
+          payload: {
+            currentUserId: responseBody.id,
+            currentUserName: responseBody.fullName,
+            currentUserRole: responseBody.role,
+          },
         });
+
         navigate('/dashboard');
       } else {
         setMessage(<span className="text-danger">Error in database conneciton</span>);

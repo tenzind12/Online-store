@@ -6,12 +6,7 @@ function Navbar() {
   const userContext = useContext(UserContext);
 
   const onLogoutClick = () => {
-    userContext.setUser({
-      isLoggedIn: false,
-      currentUserName: null,
-      currentUserId: null,
-      currentUserRole: null,
-    });
+    userContext.dispatch({ type: 'logout' });
     window.location.hash = '/login';
   };
 

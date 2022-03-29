@@ -1,24 +1,50 @@
-import React, { useState } from 'react';
-import Login from './Login';
+import React, { useReducer } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import { UserContext } from './UserContext';
+import Login from './Login';
 import Dashboard from './Dashboard';
 import Register from './Register';
 import PageNotFound from './PageNotFound';
 import Navbar from './Navbar';
-import { UserContext } from './UserContext';
 import Store from './Store';
 import ProductsList from './ProductsList';
 
+// state reducer
+const initialUser = {
+  isLoggedIn: false,
+  currentUserId: null,
+  currentUserName: null,
+  currentUserRole: null,
+};
+
+// operation reducer
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'login':
+      return {
+        isLoggedIn: true,
+        currentUserId: action.payload.currentUserId,
+        currentUserName: action.payload.currentUserName,
+        currentUserRole: action.payload.currentUserRole,
+      };
+    case 'logout':
+      return {
+        isLoggedIn: false,
+        currentUserId: null,
+        currentUserName: null,
+        currentUserRole: null,
+      };
+    default:
+      return state;
+  }
+};
+
 function App() {
-  const [user, setUser] = useState({
-    isLoggedIn: false,
-    currentUserId: null,
-    currentUserName: null,
-    currentUserRole: null,
-  });
+  // useReducer: state + operations
+  const [user, dispatch] = useReducer(reducer, initialUser);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, dispatch }}>
       <HashRouter>
         <Navbar />
         <div className="container-fluid">
