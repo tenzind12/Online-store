@@ -1,13 +1,13 @@
 import React, { useReducer } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import { UserContext } from './UserContext';
-import Login from './Login';
-import Dashboard from './Dashboard';
-import Register from './Register';
-import PageNotFound from './PageNotFound';
-import Navbar from './Navbar';
-import Store from './Store';
-import ProductsList from './ProductsList';
+import { UserContext } from './context/UserContext';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Register from './pages/Register';
+import PageNotFound from './pages/PageNotFound';
+import Navbar from './components/Navbar';
+import Store from './pages/Store';
+import ProductsList from './components/ProductsList';
 
 // state reducer
 const initialUser = {

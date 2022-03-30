@@ -1,7 +1,7 @@
 import { useEffect, useContext, useState, useCallback } from 'react';
-import { UserContext } from './UserContext';
-import Order from './Order';
-import { OrderService, ProductService } from './Service';
+import { UserContext } from '../context/UserContext';
+import Order from '../components/Order';
+import { OrderService, ProductService } from '../services/Service';
 
 function Dashboard() {
   const [orders, setOrders] = useState([]);

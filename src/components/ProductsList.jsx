@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { CategoriesService, BrandService, SortService } from './Service';
+import { CategoriesService, BrandService, SortService } from '../services/Service';
 
 export default function ProductsList() {
   const [search, setSearch] = useState('');
