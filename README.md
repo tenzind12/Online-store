@@ -1,5 +1,7 @@
 # Online-store React Js with mock `json-server`
 
+`json-server FILE_NAME.json --watch --port=PORT`
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
