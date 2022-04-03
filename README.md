@@ -1,7 +1,7 @@
 # Online-store React Js with mock `json-server`
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 
-`json-server FILE_NAME.json --watch --port=PORT`
+`json-server FILE_NAME.json --port=PORT`
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
